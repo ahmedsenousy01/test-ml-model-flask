@@ -2,7 +2,7 @@
 FROM python:3.10-slim
 
 # Install Flask and any other necessary packages
-RUN pip install flask numpy pandas scikit-learn joblib
+RUN pip install flask numpy pandas scikit-learn joblib gunicorn
 
 # Copy the Python files into the container at /app
 ADD . /app
@@ -14,4 +14,4 @@ WORKDIR /app
 EXPOSE 10000
 
 # Run index.py with Gunicorn when the container launches, enabling HTTPS
-CMD ["python", "index.py", "--host=0.0.0.0", "--port=10000"]
+CMD ["gunicorn", "-b", "0.0.0.0:10000", "index:app"]

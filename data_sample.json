@@ -1,0 +1,14 @@
+{
+	"age": 21,
+	"education_num": 5,
+	"capital_gain": 1500,
+	"capital_loss": 1000,
+	"hours_per_week": 40,
+	"country": "France",
+	"gender": "Male",
+	"workclass": "Private",
+	"occupation": "Sales",
+	"marital_status": "Divorced",
+	"relationship": "Husband",
+	"race": "Black"
+}

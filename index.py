@@ -2,7 +2,7 @@ import pickle
 import joblib
 import pandas as pd
 import numpy as np
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 app = Flask(__name__)
 
 test_data = np.array([[42,
@@ -181,7 +181,13 @@ df = pd.DataFrame(test_data, columns=['age',
                                       'race_ Black',
                                       'race_ Other',
                                       'race_ White'])
+# 'age','education_num','capital_gain','capital_loss','hours_per_week','country','gender','race','occupation','relationship','marital_status'
+# workclass_, 
 
+# step 1: user puts input in select boxes in frontend
+# step 2: frontend sends the user input through http
+# step 3: from that input generate a numpy array
+# step 4: pass the data to the model and return it's prediction
 
 def load_pipeline(filename):
     """
@@ -216,12 +222,21 @@ def load_real_pipeline(filename):
 # load the model and give it data
 model = load_real_pipeline("./pipeline.pkl")
 
-
-@app.get("/")
+@app.get("/api/predict")
 def index():
     result = int(model.predict(df)[0])
     return jsonify(status=True, data=result)
 
+@app.post("/api/pass-data")
+def pass_data():
+    # get the user data and store it in a variable
+    data = request.get_json()
+    data_values = model.named_steps["scaler"].transform(np.array(list(data.values())))
+    # print(model.named_steps)
+    
+    result = model.predict(data_values)
+    print(result)
+    return data;
 
 if __name__ == "__main__":
     app.run(debug=True, port=10000)
