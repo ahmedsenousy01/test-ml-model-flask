@@ -222,21 +222,11 @@ def load_real_pipeline(filename):
 # load the model and give it data
 model = load_real_pipeline("./pipeline.pkl")
 
-@app.get("/api/predict")
+@app.post("/api/predict")
 def index():
-    result = int(model.predict(df)[0])
+    data = request.get_json()    
+    result = int(model.predict(pd.DataFrame(data, index=[0]))[0])
     return jsonify(status=True, data=result)
-
-@app.post("/api/pass-data")
-def pass_data():
-    # get the user data and store it in a variable
-    data = request.get_json()
-    data_values = model.named_steps["scaler"].transform(np.array(list(data.values())))
-    # print(model.named_steps)
-    
-    result = model.predict(data_values)
-    print(result)
-    return data;
 
 if __name__ == "__main__":
     app.run(debug=True, port=10000)
